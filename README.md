@@ -4,8 +4,8 @@ The complete restaurant launch platform from Chef Jeff Golden / Golden Rule Cons
 
 **Live site:** https://jagtech00-source.github.io/goldens-ticket.html/
 
-Interactive checklists (LLC → first 30 days), NY permit timeline, pre-inspection simulator, line playbooks, food-protection quiz, trucks & carts, ESD/thINCubator resources, and a real readiness score.
+**Assessment repo:** https://github.com/jagtech00-source/Golden-Ticket-Assessment
 
-Progress saves in the browser. For a strategy session: jagtech00@gmail.com
+Twenty clickable operational playbooks with full instructions, NY blueprint, inspection walk, quiz, and a real readiness score.
 
 Golden's Food · 244 Genesee Street, Utica, NY
