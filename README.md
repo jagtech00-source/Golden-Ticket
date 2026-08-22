@@ -2,7 +2,7 @@
 
 The complete restaurant launch platform from Chef Jeff Golden / Golden Rule Consulting.
 
-**Live site:** https://jagtech00-source.github.io/Golden-Ticket/
+**Live site:** https://jagtech00-source.github.io/goldens-ticket.html/
 
 Interactive checklists (LLC → first 30 days), NY permit timeline, pre-inspection simulator, line playbooks, food-protection quiz, trucks & carts, ESD/thINCubator resources, and a real readiness score.
 
