@@ -1,11 +1,16 @@
-# Golden Ticket
+# Golden Ticket Assessment
 
-The complete restaurant launch platform from Chef Jeff Golden / Golden Rule Consulting.
+Restaurant launch platform and operational playbooks from Chef Jeff Golden / Golden Rule Consulting.
 
-**Live site:** https://jagtech00-source.github.io/goldens-ticket.html/
+**Live site:** https://jagtech00-source.github.io/Golden-Ticket/
 
-**Assessment repo:** https://github.com/jagtech00-source/Golden-Ticket-Assessment
+Mirror: https://jagtech00-source.github.io/goldens-ticket.html/
 
-Twenty clickable operational playbooks with full instructions, NY blueprint, inspection walk, quiz, and a real readiness score.
+Source repo: https://github.com/jagtech00-source/Golden-Ticket-Assessment
 
-Golden's Food · 244 Genesee Street, Utica, NY
+Free readiness assessment, 9-phase NY blueprint (LLC → first 30 days), **20 clickable operational playbooks** with full instructions and checklists, inspection simulator, food-protection quiz, trucks & carts, ESD / thINCubator resources.
+
+Progress saves in the browser.
+
+Golden's Food · 244 Genesee Street, Utica, NY  
+jagtech00@gmail.com
