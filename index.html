@@ -112,7 +112,7 @@
     <div class="wrap">
       <p><b class="gold">Golden Ticket</b> · Golden Rule Consulting · Chef Jeff Golden · Utica, New York</p>
       <p>244 Genesee Street · Golden's Food · 16 seats as the lab</p>
-      <p><a href="mailto:jagtech00@gmail.com">jagtech00@gmail.com</a></p>
+      <p><a href="mailto:goldensruleconsulting@gmail.com">goldensruleconsulting@gmail.com</a></p>
       <p style="opacity:.5;font-size:12px">© 2026 Golden Rule Consulting</p>
     </div>
   </footer>
@@ -404,7 +404,74 @@ if (!state.pb) state.pb = {};
         </fieldset>`).join("")}
         ${done ? `<div class="card" style="background:var(--navy);color:var(--cream);border:0"><h2 class="gold">Your score: ${p}</h2>
           <p>${p>=80?"Strong binder.":p>=55?"A foundation with gaps.":"You are early — get the sequence straight before finishes."}</p>
-          <a class="btn" href="#/blueprint">Open the blueprint</a></div>` : "<p class=muted>Answer all eight to generate the score.</p>"}`);
+          <a class="btn" href="#/blueprint">Open the blueprint</a></div>
+        <div class="card" id="as-send" style="margin-top:12px">
+          <h3 style="color:var(--navy);margin:0 0 6px">Send your results to Jeff</h3>
+          <p class="muted" style="margin:0 0 12px">Jeff will look over your answers. Add your email if you want a copy too.</p>
+          <p style="margin:0 0 10px"><label>Your name (optional)<br><input id="as-name" type="text" autocomplete="name" style="width:100%;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;font:inherit" /></label></p>
+          <p style="margin:0 0 12px"><label>Your email (optional, for your copy)<br><input id="as-email" type="email" autocomplete="email" style="width:100%;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;font:inherit" /></label></p>
+          <button class="btn navy" id="as-submit" type="button">Email my results</button>
+          <p id="as-status" role="status" aria-live="polite" style="margin:12px 0 0"></p>
+        </div>` : "<p class=muted>Answer all eight to generate the score.</p>"}`);
+    }
+    const RESULTS_EMAIL = "goldensruleconsulting@gmail.com";
+    function assessmentSummary() {
+      const max = DATA.ASSESSMENT.reduce((s,q)=>s+Math.max(...q.options.map(o=>o.points)),0);
+      const score = DATA.ASSESSMENT.reduce((s,q)=>{
+        const o = q.options.find(x => x.id === state.assessment[q.id]);
+        return s + (o ? o.points : 0);
+      },0);
+      const p = Math.round(score/max*100);
+      const verdict = p>=80?"Strong binder.":p>=55?"A foundation with gaps.":"You are early — get the sequence straight before finishes.";
+      const answers = {};
+      DATA.ASSESSMENT.forEach((q,i) => {
+        const o = q.options.find(x => x.id === state.assessment[q.id]);
+        answers[String(i+1).padStart(2,"0") + ". " + q.prompt] = o ? o.label : "(no answer)";
+      });
+      return { p, verdict, answers };
+    }
+    async function sendAssessment() {
+      const btn = document.getElementById("as-submit");
+      const status = document.getElementById("as-status");
+      const name = document.getElementById("as-name").value.trim();
+      const email = document.getElementById("as-email").value.trim();
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.style.color = "var(--danger)";
+        status.textContent = "That email doesn't look right. Fix it or leave it blank.";
+        return;
+      }
+      const { p, verdict, answers } = assessmentSummary();
+      const payload = Object.assign({
+        _subject: "Golden Ticket assessment: score " + p + (name ? " from " + name : ""),
+        _template: "table",
+        _captcha: "false",
+        "Name": name || "(not given)",
+        "Email": email || "(not given)",
+        "Score": p + " / 100",
+        "Verdict": verdict
+      }, answers);
+      if (email) { payload._replyto = email; payload._cc = email; }
+      btn.disabled = true;
+      status.style.color = "var(--muted)";
+      status.textContent = "Sending…";
+      try {
+        const res = await fetch("https://formsubmit.co/ajax/" + RESULTS_EMAIL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && String(data.success) === "true") {
+          status.style.color = "var(--ok)";
+          status.textContent = "Sent! Jeff has your results" + (email ? ", and a copy is on its way to " + email + "." : ".");
+        } else {
+          throw new Error(data.message || "Send failed");
+        }
+      } catch (e) {
+        btn.disabled = false;
+        status.style.color = "var(--danger)";
+        status.textContent = "Sorry, that didn't go through. Try again, or email Jeff at " + RESULTS_EMAIL + ".";
+      }
     }
     function trucks() {
       return layout(`<h1 style="color:var(--navy)">A truck is not a shortcut.</h1>
@@ -441,8 +508,8 @@ if (!state.pb) state.pb = {};
       return `<article class="wrap" style="max-width:640px;padding:48px 16px">
         <h1 style="color:var(--navy)">Talk to Jeff.</h1>
         <p class="muted">Strategy sessions, launch walk-throughs, and partnership talks. The platform stays free.</p>
-        <p>Golden's Food · 244 Genesee Street, Utica, NY<br><a href="mailto:jagtech00@gmail.com">jagtech00@gmail.com</a></p>
-        <p><a class="btn" href="mailto:jagtech00@gmail.com?subject=Golden%20Ticket%20session">Email Jeff</a></p>
+        <p>Golden's Food · 244 Genesee Street, Utica, NY<br><a href="mailto:goldensruleconsulting@gmail.com">goldensruleconsulting@gmail.com</a></p>
+        <p><a class="btn" href="mailto:goldensruleconsulting@gmail.com?subject=Golden%20Ticket%20session">Email Jeff</a></p>
       </article>`;
     }
     function render() {
@@ -488,6 +555,8 @@ if (!state.pb) state.pb = {};
           save(state); render();
         });
       });
+      const asBtn = document.getElementById("as-submit");
+      if (asBtn) asBtn.addEventListener("click", sendAssessment);
       document.querySelectorAll("[data-pb]").forEach(el => {
         el.addEventListener("click", () => {
           const k = el.getAttribute("data-pb");
